@@ -1,0 +1,87 @@
+{
+    "TMAX": 10.01,
+    
+	"DT": 0.005,
+    "DH": 100.0,
+    
+	"NX": 300,
+    "NY": 300,
+    "NZ": 300,
+
+	"centerX" : 150,
+	"centerY" : 150,
+
+	"IT_SKIP" : 10,
+
+	"sliceX" : 150, 
+	"sliceY" : 150,
+	"sliceZ" : 150,
+	"sliceFreeSurf" : 1,
+
+    "PX": 1,
+    "PY": 3,
+    "PZ": 1,
+
+	"sourceX" : 150, 
+	"sourceY" : 150,
+	"sourceZ" : 150,
+
+	"centerLatitude" : 31.69217,
+	"centerLongitude": 104.091415,
+
+	"nPML" : 12,
+
+
+	"gauss_hill"	: 0,
+	"useTerrain"    : 1, 
+
+
+
+	"itslice"		: 1000,
+	"itstep"		: 100,
+	"waveoutput"	: "vy",
+	"slicename"		: "xy",
+	"itstart"		: 0,
+	"itend"			: 8000,
+	"igpu"			: 5,
+    "out"			: "./output",
+
+	"gpu_nodes"		: {
+					  "teslagpus" : [ 0, 1, 3]
+					  },
+
+	
+	"TerrainTif"	: "./terrainTif",
+	"TerrainDir"	: "./TerrainDir",
+	"srtm90"		: 1,
+	
+	"lonStart"		: 95,
+	"latStart"		: 20,
+	"blockX"		: 3,
+	"blockY"		: 3,
+
+	"Depth(km)"  : 20,
+
+
+	"MLonStart"		: 99,
+	"MLatStart"		: 28,
+	"MLonEnd"		: 110,
+	"MLatEnd"		: 37,
+	"MLonStep"		: 0.5,
+	"MLatStep"		: 0.5,
+
+	"MVeticalStep"	: 500,
+
+	"MediumDir"		: "./MediumDir",
+	
+
+
+	"sourceFile" : "./source/source.bin", 
+
+
+
+	"FAST_AXIS"		: "X"
+
+}
+
+

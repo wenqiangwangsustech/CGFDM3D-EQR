@@ -1,0 +1,104 @@
+{
+    "TMAX": 158.4198,
+    
+	"DT": 1.98e-2,
+    "DH": 500.0,
+    
+	"NX": 1000,
+    "NY": 800,
+    "NZ": 200,
+
+	"Depth(km)"  : 100,
+
+	"centerX" : 500,
+	"centerY" : 500,
+
+	"IT_SKIP" : 1000,
+
+	"sliceX" : 500, 
+	"sliceY" : 500,
+	"sliceZ" : 190,
+	"sliceFreeSurf" : 1,
+
+    "PX": 2,
+    "PY": 2,
+    "PZ": 2,
+
+	"sourceX" : 100, 
+	"sourceY" : 100,
+	"sourceZ" : 190,
+
+	"centerLatitude" : 31.69217,
+	"centerLongitude": 104.091415,
+
+
+	"nPML" : 12,
+
+
+	"gauss_hill"	: 0,
+	"useTerrain"    : 1, 
+	"useMedium"     : 1,
+	"useMultiSource": 1,
+
+	"useSingleSource(ricker)" : 0,
+	"rickerfc"		: 1.5,
+
+	"ShenModel"		: 0,
+	"Crust_1Medel": 1,
+
+
+
+	"itslice"		: 1000,
+	"itstep"		: 100,
+	"waveoutput"	: "vy",
+	"slicename"		: "xy",
+	"itstart"		: 0,
+	"itend"			: 8000,
+	"igpu"			: 5,
+    "out"			: "./output",
+
+	"gpu_nodes"		: {
+						"teslagpus" : [ 0, 1, 2, 3, 4, 5, 6, 7]
+					  },
+
+	
+	"TerrainTif"	: "./terrainTif",
+	"TerrainDir"	: "./TerrainDir",
+	"srtm90"		: 1,
+	
+	"lonStart"		: 95,
+	"latStart"		: 20,
+	"blockX"		: 3,
+	"blockY"		: 3,
+
+
+
+	"MLonStart"		: 99,
+	"MLatStart"		: 28,
+	"MLonEnd"		: 110,
+	"MLatEnd"		: 37,
+	"MLonStep"		: 0.5,
+	"MLatStep"		: 0.5,
+
+	"MVeticalStep"	: 500,
+
+	"MediumDir"		: "./MediumDir",
+
+	"CrustDir"		: "./crust1.0",
+	"CrustLonStep"  : 1.0,
+	"CrustLatStep"  : 1.0,
+
+
+	
+
+
+	"sourceDir"	 : "./source",
+	"sourceFile" : "source.bin", 
+
+
+
+	"FAST_AXIS"		: "X"
+
+}
+
+

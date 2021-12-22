@@ -1,0 +1,104 @@
+{
+    "TMAX": 100.01,
+    
+	"DT": 9.0e-3,
+    "DH": 200.0,
+    
+	"NX": 1000,
+    "NY": 1000,
+    "NZ": 400,
+
+	"Depth(km)"  : 80,
+
+	"centerX" : 500,
+	"centerY" : 500,
+
+	"IT_SKIP" : 1000,
+
+	"sliceX" : 500, 
+	"sliceY" : 500,
+	"sliceZ" : 190,
+	"sliceFreeSurf" : 1,
+
+    "PX": 2,
+    "PY": 2,
+    "PZ": 2,
+
+	"sourceX" : 100, 
+	"sourceY" : 100,
+	"sourceZ" : 190,
+
+	"centerLongitude": 38.9543,
+	"centerLatitude" : 38.2861,
+
+
+	"nPML" : 12,
+
+
+	"gauss_hill"	: 0,
+	"useTerrain"    : 1, 
+	"useMedium"     : 1,
+	"useMultiSource": 1,
+
+	"useSingleSource(ricker)" : 0,
+	"rickerfc"		: 1.5,
+
+	"ShenModel"		: 0,
+	"Crust_1Medel"	: 1,
+
+
+
+	"itslice"		: 1000,
+	"itstep"		: 100,
+	"waveoutput"	: "vy",
+	"slicename"		: "xy",
+	"itstart"		: 0,
+	"itend"			: 8000,
+	"igpu"			: 5,
+    "out"			: "./output",
+
+	"gpu_nodes"		: {
+						"teslagpus" : [ 0, 1, 2, 3, 4, 5, 6, 7]
+					  },
+
+	
+	"TerrainTif"	: "./terrainTif",
+	"TerrainDir"	: "./TerrainDir",
+	"srtm90"		: 1,
+	
+	"lonStart"		: 35,
+	"latStart"		: 35,
+	"blockX"		: 2,
+	"blockY"		: 2,
+
+
+
+	"MLonStart"		: 99,
+	"MLatStart"		: 28,
+	"MLonEnd"		: 110,
+	"MLatEnd"		: 37,
+	"MLonStep"		: 0.5,
+	"MLatStep"		: 0.5,
+
+	"MVeticalStep"	: 500,
+
+	"MediumDir"		: "./MediumDir",
+
+	"CrustDir"		: "./crust1.0",
+	"CrustLonStep"  : 1.0,
+	"CrustLatStep"  : 1.0,
+
+
+	
+
+
+	"sourceDir"	 : "./source",
+	"sourceFile" : "USGSsource.bin", 
+
+
+
+	"FAST_AXIS"		: "X"
+
+}
+
+

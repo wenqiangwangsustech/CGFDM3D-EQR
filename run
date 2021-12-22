@@ -1,0 +1,22 @@
+#!/bin/bash
+
+MPIHOME=/public/software/openmpi-4.1.1-cuda
+CUDAHOME=/public/software/cuda-10.0/lib64
+
+
+export LD_LIBRARY_PATH=/public/software/proj-8.1.0/lib:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=/public/software/sqlite3/lib:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=${MPIHOME}/lib:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=${CUDAHOME}/lib:${LD_LIBRARY_PATH}
+export PROJ_LIB=/public/software/proj-8.1.0/share/proj
+
+
+PX=`cat params.json | grep "\"PX\"" | tr -cd "[0-9]"`
+PY=`cat params.json | grep "\"PY\"" | tr -cd "[0-9]"`
+PZ=`cat params.json | grep "\"PZ\"" | tr -cd "[0-9]"`
+
+ 
+
+RUN=${MPIHOME}/bin/mpirun
+
+${RUN} -np $(($PX*$PY*$PZ)) ./bin/main | tee log

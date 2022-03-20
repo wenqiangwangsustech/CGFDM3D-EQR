@@ -13,7 +13,7 @@
 
 #define CRUSTSIZE 4
 #define CUnit 1e3// 1km/s = 1e3m
-
+#define BoundaryDifference 1000.0
 
 
 void verifyInterpVs( PARAMS params, GRID grid, MPI_COORD thisMPICoord, float * Vs, int k );
@@ -165,10 +165,11 @@ void crustInterpFunc(	PARAMS params, GRID grid, int nLon, int nLat, int nLayer,
 			crustInterp.bnds[pos] = interp2d( x, y, bnds, x_, y_ );
         END_LOOP2D( )
 	if ( grid.PZ - 1 == thisMPICoord.Z )
-		verifyInterpVs( params, grid, thisMPICoord, crustInterp.vs, K );
+		verifyInterpVs( params, grid, thisMPICoord, crustInterp.bnds, K );
     }
 	
 }
+
 
 void solveStructure( GRID grid, STRUCTURE structure, COORD coord, CRUST crustInterp, int nLayer  )
 {
@@ -176,17 +177,120 @@ void solveStructure( GRID grid, STRUCTURE structure, COORD coord, CRUST crustInt
 	int _ny_ = grid._ny_;
 	int _nz_ = grid._nz_;
 
-	long long index = 0, pos = 0, pos1 = 0;
+	long long index = 0, 
+	posl = 0, posl_1 = 0,
+	posnLayer_1 = 0,
+	pos0, posm, posm1;
 
 	float vs, vp, rho, bnds, bnds1;
-	int i, j, k, K;	
+	int i, j, k, m, l;	
 	
 	float coordZ = 0.0f;
 
 	int startLayer = 0;
 
+
+	float maxBnd = -10000000;
+	float minBnd = 10000000;
+	int K = 0;
+	long long pos = 0;
+    for ( K = 0; K < nLayer; K ++ )
+    {
+        FOR_LOOP2D( i, j, 0, _nx_, 0, _ny_ )
+			index = Index2D( i, j, _nx_, _ny_);
+			pos = K * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_);
+			crustInterp.bnds[pos] *= CUnit;
+			if (  crustInterp.bnds[pos] >= maxBnd )
+			{
+				maxBnd = crustInterp.bnds[pos];
+			}
+			if (  crustInterp.bnds[pos] < minBnd )
+			{
+				minBnd = crustInterp.bnds[pos];
+			}
+        END_LOOP2D( )
+
+	}
+
+
+	//printf( "maxBnd = %f, minBnd = %f\n", maxBnd, minBnd );
+
 	FOR_LOOP3D( i, j, k, 0, _nx_, 0, _ny_, 0, _nz_ )			
         index = INDEX( i, j, k );
+
+		coordZ = coord.z[index];
+		
+		pos0 = 0 * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+		if ( coordZ > crustInterp.bnds[pos0] )
+		{
+			l = 0;
+			posl = l * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+			while ( abs( crustInterp.bnds[pos0] - crustInterp.bnds[posl] ) < BoundaryDifference )
+			{
+				l += 1;
+				posl = l * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+			}
+
+			posl_1 = ( l - 1 ) * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+			vs   = crustInterp.vs  [posl_1];
+			vp   = crustInterp.vp  [posl_1];
+			rho  = crustInterp.rho [posl_1];
+			
+		}
+
+		posnLayer_1 = ( nLayer - 1 ) * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+		if ( coordZ <= crustInterp.bnds[posnLayer_1] )
+		{
+			vs   = crustInterp.vs  [posnLayer_1];
+			vp   = crustInterp.vp  [posnLayer_1];
+			rho  = crustInterp.rho [posnLayer_1];
+		}
+		
+		pos0 = 0 * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+		posnLayer_1 = ( nLayer - 1 ) * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+		if ( coordZ <= crustInterp.bnds[pos0] && coordZ > crustInterp.bnds[posnLayer_1] )
+		{
+			for ( m = 0; m < nLayer - 1; m ++ )
+			{
+				posm = m * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+				posm1 = ( m + 1 ) * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ ); 
+				if ( coordZ <= crustInterp.bnds[posm] && coordZ > crustInterp.bnds[posm1]  )
+				{
+					l = m;
+					posl = l * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ );
+					while ( abs( crustInterp.bnds[posm] - crustInterp.bnds[posl] ) < BoundaryDifference )
+					{
+						l += 1;
+						posl = l * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ );
+					}
+					posl_1 = ( l - 1 ) * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ );
+					vs   = crustInterp.vs  [posl_1];
+					vp   = crustInterp.vp  [posl_1];
+					rho  = crustInterp.rho [posl_1];
+				}
+
+			}
+
+		}
+
+
+		/*
+
+		if ( vp > 8.04 ) vp = 8.04;
+		if ( vs > 4.47 ) vs = 4.47;
+		if ( rho > 3.31 ) rho = 3.31;
+
+		if ( vp < 1.80 )
+		{
+			vp  = 1.50;
+			vs  = 0.00;
+			rho = 1.02;
+		}
+		*/
+		structure.Vs[index]  = vs  * CUnit;//LAM;
+		structure.Vp[index]  = vp  * CUnit;//MU;
+		structure.rho[index] = rho * CUnit;//RHO;
+		/*
 		for ( K = startLayer; K < nLayer - 1; K ++ )
 		{
 			pos = K * _nx_ * _ny_ + Index2D( i, j, _nx_, _ny_ );
@@ -238,7 +342,7 @@ void solveStructure( GRID grid, STRUCTURE structure, COORD coord, CRUST crustInt
 		structure.Vs[index]  = vs  * CUnit;//LAM;
 		structure.Vp[index]  = vp  * CUnit;//MU;
 		structure.rho[index] = rho * CUnit;//RHO;
-
+		*/
 		
 
     END_LOOP3D( )
